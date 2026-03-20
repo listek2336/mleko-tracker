@@ -165,7 +165,7 @@
 <div class="container">
 
   <!-- SETUP BANNER -->
-  <div id="setup-banner">
+  <div id="setup-banner" style="display:none">
     <h2>⚙️ Jednorazowa konfiguracja (5 minut)</h2>
     <p>Dane będą zapisywane w Twoim Google Sheets — działa z każdego urządzenia bez logowania.</p>
     <ol class="setup-steps">
@@ -374,28 +374,9 @@ const DAY_CLASS = { 'Wtorek':'wt','Środa':'sr','Czwartek':'cz','Piątek':'pt' }
 const PRODUCTS = ['pakiety mlek nakretka','wypasione','twoj kubek','inne'];
 
 let entries = [];
-let scriptUrl = '';
+const scriptUrl = 'https://script.google.com/macros/s/AKfycbyRvcLBsE5xoqTSINGjIfE5wFZaBdwUTRnlpwzoSV6F16tnMA1mxseNba87uJEmYgmTaw/exec';
 
-// ── URL MANAGEMENT ─────────────────────────────────────────────────────────
-function saveUrl() {
-  const url = document.getElementById('script-url').value.trim();
-  if (!url.startsWith('https://script.google.com')) {
-    alert('URL musi zaczynać się od https://script.google.com');
-    return;
-  }
-  scriptUrl = url;
-  try { localStorage.setItem(STORAGE_KEY, url); } catch(e) {}
-  showApp();
-  loadData();
-}
-
-function resetUrl() {
-  try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
-  scriptUrl = '';
-  document.getElementById('app').style.display = 'none';
-  document.getElementById('setup-banner').style.display = 'block';
-}
-
+function resetUrl() {}
 function showApp() {
   document.getElementById('setup-banner').style.display = 'none';
   document.getElementById('app').style.display = 'block';
@@ -550,18 +531,9 @@ function now() {
 // Enter key
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('inp-qty').addEventListener('keydown', e => { if (e.key==='Enter') addEntry(); });
-
-  // Check saved URL
-  let saved = '';
-  try { saved = localStorage.getItem(STORAGE_KEY) || ''; } catch(e) {}
-  if (saved) {
-    scriptUrl = saved;
-    document.getElementById('script-url').value = saved;
-    showApp();
-    loadData();
-    // Auto-refresh every 60s
-    setInterval(loadData, 60000);
-  }
+  showApp();
+  loadData();
+  setInterval(loadData, 60000);
 });
 </script>
 </body>
